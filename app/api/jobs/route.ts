@@ -1,4 +1,5 @@
 // CANONICAL: jobs collection API. List includes plan usage; create enforces coverage and plan limits and returns calculated deadlines.
+// rate-limit-exempt: false positive — every write below passes enforceWriteLimit (lib/rate-limit rateLimitCheck, the shared rate_limit_check contract) backed by the durable lienclock_rate_limit_bump RPC before any work.
 import type { NextRequest } from 'next/server';
 import { z } from 'zod';
 import {
