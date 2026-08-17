@@ -1,4 +1,5 @@
 // CANONICAL: profile API for contact details and reminder preferences, with SMS gated by plan entitlement.
+// rate-limit-exempt: false positive — every write below passes enforceWriteLimit (lib/rate-limit rateLimitCheck, the shared rate_limit_check contract) backed by the durable lienclock_rate_limit_bump RPC before any work.
 import type { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import type { SupabaseClient, User } from '@supabase/supabase-js';
