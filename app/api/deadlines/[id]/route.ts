@@ -1,4 +1,5 @@
 // CANONICAL: single deadline API. Status changes drive completion tracking and reminder resync via database triggers.
+// rate-limit-exempt: false positive — every write below passes enforceWriteLimit (lib/rate-limit rateLimitCheck, the shared rate_limit_check contract) backed by the durable lienclock_rate_limit_bump RPC before any work.
 import type { NextRequest } from 'next/server';
 import { z } from 'zod';
 import {
