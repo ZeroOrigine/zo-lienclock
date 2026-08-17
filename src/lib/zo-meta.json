@@ -1,4 +1,24 @@
 {
-  "present": false,
-  "_note": "Sentinel. The deploy layer overwrites this file per product with real birth data (name, tagline, born, scores, cost, funders, story_url). While present is false or name is absent, /about returns 404. This file MUST exist so the static import never breaks the build (zeroorigine.com ships the sentinel and gets no About page)."
+  "name": "LienClock",
+  "tagline": "Never lose your right to get paid because you missed a lien deadline.",
+  "description": "Web app where a subcontractor enters a job's state, GC, and start/completion date and instantly gets every preliminary notice, lien filing, and enforcement deadline auto-calculated with email/SMS reminders. It never files anything on your behalf \u2014 it just makes sure you never miss the window to protect your own right to be paid.",
+  "born": "2026-08-17T02:16:01.185193+00:00",
+  "research_score": 7.6,
+  "ethics_verdict": "APPROVED",
+  "ethics_score": 7.4,
+  "ethics_concerns": [
+    "Lien statutes are highly state-specific and unforgiving of defects; inaccurate templates could cause users to lose payment rights",
+    "Risk of being construed as unauthorized practice of law (UPL) if positioned as legal advice"
+  ],
+  "qa_score": 183,
+  "qa_max": 185,
+  "true_cost": 111.26,
+  "calls": 107,
+  "funders": [
+    "the founder"
+  ],
+  "story_url": "https://zeroorigine.com/story/lienclock",
+  "template_sha": null,
+  "publisher": "ZeroOrigine",
+  "publisher_url": "https://zeroorigine.com"
 }
