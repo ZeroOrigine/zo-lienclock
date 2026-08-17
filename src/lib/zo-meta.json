@@ -12,13 +12,13 @@
   ],
   "qa_score": 183,
   "qa_max": 185,
-  "true_cost": 111.26,
-  "calls": 107,
+  "true_cost": 114.48,
+  "calls": 111,
   "funders": [
     "the founder"
   ],
   "story_url": "https://zeroorigine.com/story/lienclock",
-  "template_sha": null,
+  "template_sha": "f1ed9858c4b4",
   "publisher": "ZeroOrigine",
   "publisher_url": "https://zeroorigine.com"
 }
