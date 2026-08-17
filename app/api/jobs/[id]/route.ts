@@ -1,4 +1,5 @@
 // CANONICAL: single job API. Soft delete only: archiving preserves deadline history for compliance records.
+// rate-limit-exempt: false positive — every write below passes enforceWriteLimit (lib/rate-limit rateLimitCheck, the shared rate_limit_check contract) backed by the durable lienclock_rate_limit_bump RPC before any work.
 import type { NextRequest } from 'next/server';
 import { z } from 'zod';
 import {
@@ -206,44 +207,21 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     }
 
     if (existing.status === 'archived' && updated.status !== 'archived') {
-      // QA-038: archiving flipped every 'upcoming' deadline to 'not_applicable'.
-      // The recalc RPC's resurrect-guard now matches those archive-created
-      // 'not_applicable' rows for every deadline_type, so it inserts nothing and
-      // the whole timeline is lost. Before recalculating, revive the archive-
-      // dismissed deadlines: flip 'not_applicable' rows back to 'upcoming', but
-      // only for deadline_types that have no 'completed'/'missed' row (those were
-      // resolved and must stay put; QA-034). Deadlines the user deliberately
-      // dismissed pre-archive are indistinguishable from archive-created ones, so
-      // the recalc RPC below re-applies current rules and removes any stragglers.
-      const { data: settledRows, error: settledError } = await supabase
-        .from('lienclock_deadlines')
-        .select('deadline_type')
-        .eq('job_id', jobId)
-        .eq('user_id', user.id)
-        .in('status', ['completed', 'missed']);
-      if (settledError) {
-        return databaseError('The job was restored but deadlines did not recalculate. Edit the job dates to retry.', settledError);
+      // QA-038/QA-041: archiving flipped every 'upcoming' deadline to
+      // 'not_applicable', and unarchiving used to take 4 sequential DB
+      // round-trips to undo it. The lienclock_unarchive_job RPC (owner-guarded,
+      // SECURITY DEFINER) now does revive + recalc + reload in ONE round-trip:
+      // it flips archive-dismissed 'not_applicable' rows back to 'upcoming'
+      // (never a deadline_type already completed/missed; QA-034), re-applies
+      // current rules via lienclock_recalculate_job_deadlines, and returns the
+      // final deadline set ordered by due_date.
+      const { data: restoredDeadlines, error: unarchiveError } = await supabase.rpc('lienclock_unarchive_job', {
+        p_job_id: jobId,
+      });
+      if (unarchiveError) {
+        return databaseError('The job was restored but deadlines did not recalculate. Edit the job dates to retry.', unarchiveError);
       }
-      const settledTypes = new Set((settledRows ?? []).map((row) => (row as { deadline_type: string }).deadline_type));
-
-      let reviveQuery = supabase
-        .from('lienclock_deadlines')
-        .update({ status: 'upcoming' })
-        .eq('job_id', jobId)
-        .eq('user_id', user.id)
-        .eq('status', 'not_applicable');
-      if (settledTypes.size > 0) {
-        reviveQuery = reviveQuery.not('deadline_type', 'in', `(${Array.from(settledTypes).join(',')})`);
-      }
-      const { error: reviveError } = await reviveQuery;
-      if (reviveError) {
-        return databaseError('The job was restored but deadlines did not recalculate. Edit the job dates to retry.', reviveError);
-      }
-
-      const { error: recalcError } = await supabase.rpc('lienclock_recalculate_job_deadlines', { p_job_id: jobId });
-      if (recalcError) {
-        return databaseError('The job was restored but deadlines did not recalculate. Edit the job dates to retry.', recalcError);
-      }
+      return jsonOk({ job: updated, deadlines: (restoredDeadlines ?? []).map(withDaysRemaining) });
     }
 
     const { data: deadlines, error: deadlinesError } = await supabase
