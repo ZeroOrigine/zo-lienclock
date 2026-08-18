@@ -30,7 +30,6 @@ const ROWS: { label: string; free: RowValue; pro: RowValue; annual: RowValue }[]
   { label: 'Statute citation on every deadline', free: true, pro: true, annual: true },
   { label: 'Deadline dashboard sorted by urgency', free: true, pro: true, annual: true },
   { label: 'Email reminders', free: true, pro: true, annual: true },
-  { label: 'SMS text reminders', free: false, pro: true, annual: true },
   { label: 'Billing', free: 'Free forever', pro: '$19 monthly', annual: '$190 yearly, 2 months free' },
   { label: 'Support', free: 'Email', pro: 'Email', annual: 'Email' },
 ]
@@ -47,10 +46,6 @@ const PRICING_FAQS = [
   {
     q: 'Can I change or cancel my plan?',
     a: 'Yes. Change or cancel anytime from billing settings in your account. The free plan stays free.',
-  },
-  {
-    q: 'Are SMS reminders extra?',
-    a: 'No. SMS text reminders are included in the Pro price, monthly or annual.',
   },
   {
     q: 'What does Pro Annual add?',

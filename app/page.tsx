@@ -1,6 +1,6 @@
 // CANONICAL: LienClock marketing landing page. Sections inline; shared chrome imported from components/marketing.
 // PATCH: every coverage, price, and plan claim now matches the shipped product exactly:
-// 10 covered states (not 50), Free + Pro $19/$190 (no Enterprise), SMS on Pro only.
+// 10 covered states (not 50), Free + Pro $19/$190 (no Enterprise). Email reminders only (finding #409: no SMS organ exists; claim removed 2026-08-18).
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import SiteNav from '@/components/marketing/site-nav'
@@ -99,7 +99,7 @@ const FAQS = [
   },
   {
     q: 'How do reminders work?',
-    a: 'Email reminders are on every plan, and Pro adds SMS text reminders. Each deadline sends reminders as its window approaches, so nothing sneaks up on you.',
+    a: 'Email reminders are on every plan. Each deadline sends reminders as its window approaches, so nothing sneaks up on you.',
   },
   {
     q: 'Is this legal advice?',
@@ -114,7 +114,7 @@ const FAQS = [
 const DOES = [
   'Calculates preliminary notice, lien filing, and enforcement deadlines for every job',
   'Applies the right state\u2019s rules automatically',
-  'Reminds you by email, and by SMS on Pro, before each window closes',
+  'Reminds you by email before each window closes',
   'Sorts every deadline across every job by urgency',
 ]
 
@@ -314,7 +314,7 @@ export default function LandingPage() {
                 State, GC, start and completion dates. That is the whole setup. Your deadline schedule lands in seconds.
               </FeatureCard>
               <FeatureCard title="Reminders that reach you" icon={<BellIcon />}>
-                Email on every plan, SMS on Pro. Each deadline pings you ahead of time, while there is still time to act.
+                Email reminders on every plan. Each deadline pings you ahead of time, while there is still time to act.
               </FeatureCard>
               <FeatureCard title="One list, sorted by urgency" icon={<ListIcon />}>
                 Every deadline across every job and state in one countdown, ordered by what closes next. It reads like a punch list.

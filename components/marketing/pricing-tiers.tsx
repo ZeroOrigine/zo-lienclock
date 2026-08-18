@@ -18,7 +18,6 @@ const FREE_FEATURES = [
 const PRO_FEATURES = [
   'Everything in Free',
   'Unlimited active jobs',
-  'SMS text reminders on top of email',
   'Every job and state in one countdown',
   'Email support',
 ]
