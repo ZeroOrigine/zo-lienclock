@@ -111,6 +111,18 @@ export async function POST(request: Request) {
         user_id: user.id,
         user_email: user.email,
         plan_code: plan.code,
+        // #240: the plan FACTS. The proxy (checkout v4) turns a recurring plan
+        // into a real Stripe price by lookup key; without these, every
+        // subscription checkout died at the proxy with "amount_cents required"
+        // — the exact failure behind the founder's "payment service is taking
+        // a moment" screenshot of 2026-08-18. The row is already loaded above;
+        // sending it costs nothing and is the whole difference between a
+        // billing page and a decoration.
+        amount_cents: plan.price_cents,
+        currency: 'usd',
+        product_name: `LienClock ${plan.name}`,
+        interval: plan.billing_interval,
+        metadata: { plan_code: plan.code },
         success_url: `${site}/billing?checkout=success`,
         cancel_url: `${site}/billing?checkout=cancel`,
       }),
