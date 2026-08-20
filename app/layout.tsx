@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import ZoBeacon from '@/components/ZoBeacon';
 import './globals.css';
+import ZoAuthFragmentBridge from '@/components/ZoAuthFragmentBridge'
 
 // #100: a descendant reads URL search params (useSearchParams); opt this
 // route out of static generation so `next build` does not CSR-bail.
@@ -40,6 +41,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="stylesheet" href="/fonts/fonts.css" />
       </head>
       <body className="bg-slate-50 font-sans text-slate-900 antialiased">
+        <ZoAuthFragmentBridge />
         {children}
         <ZoBeacon />
       </body>
